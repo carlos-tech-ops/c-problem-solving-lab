@@ -1,8 +1,19 @@
-SRC=src/hello.c
-OUT=build/hello
+SRC_DIR := src
+BUILD_DIR := build
 
-all: $(SRC)
-	mkdir -p build
-	gcc $(SRC) -o $(OUT) -Wall -Wextra -std=c11
+SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
+BIN_FILES := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%, $(SRC_FILES))
+
+CC := gcc
+CFLAGS := -Wall -Wextra -std=c11
+
+.PHONY: all clean
+
+all: $(BIN_FILES)
+
+$(BUILD_DIR)/%: $(SRC_DIR)/%.c
+	@mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) $< -o $@
+
 clean:
-	rm -rf build
+	rm -rf $(BUILD_DIR)
